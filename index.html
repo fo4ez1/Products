@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      .wrap {
+        max-width: 900px;
+        border: 2px solid green;
+        margin: 20px;
+        padding: 20px;
+      }
+    
+      .shoesWrap {
+        display: inline-block;
+        vertical-align: top;
+        margin: 10px;
+        width: 200px;
+      }
+    
+      .shoesWrap img {
+        height: 200px;
+      }
+    </style>
+</head>
+<body>
+<h1>Магазин</h1>
+<button onclick="loadShoes()">Загрузить Обувь</button>
+<div id="shoes"></div>
+<script>
+  function loadShoes() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "shoes1.json", true);
+    xhttp.setRequestHeader(
+      "Content-type",
+      "application/json; charset=utf-8"
+    );
+    xhttp.send();
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState != 4) return;
+      if (xhttp.status != 200) {
+        alert(xhttp.status + ": " + xhr.statusText);
+      } else {
+        let shoes = JSON.parse(xhttp.responseText);
+        insertShoes(shoes);
+      }
+    };
+  }
+
+  function insertShoes(shoes) {
+    let str = `<div class="wrap">`;
+    for (let i = 0; i < shoes.length; i++) {
+      str += `<div class="shoesWrap">`;
+      str += `<div class="image"><img src="${shoes[i].imageCover}" /></div>`;
+      str += `<h2>${shoes[i].name}</h2>`;
+      str += `<p>${shoes[i].category}</p>`;
+      if (shoes[i].stocked)
+        str += `<p><strong>${shoes[i].price}</strong></p>`;
+      else str += `<p><s>${shoes[i].price}</s></p>`;
+
+      str += `</div>`;
+    }
+
+    str += `</div>`;
+    document.getElementById("shoes").innerHTML = str;
+  }
+</script>
+</body>
+</html>
